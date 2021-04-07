@@ -1,0 +1,22 @@
+package com.hp.mbvan.tsp.vehicle.service;
+
+import org.springframework.transaction.annotation.Transactional;
+
+import com.hp.mbvan.common.service.BaseCrudService;
+import com.hp.mbvan.tsp.vehicle.domain.Driver;
+import com.hp.mbvan.tsp.vehicle.domain.DriverVan;
+
+@Transactional(readOnly = true)
+public interface DriverService extends BaseCrudService<Driver> {
+
+	
+	public DriverVan linkDriverToVan(DriverVan driverVan);
+	
+	public DriverVan getCurrentDriverVanByDriver(Long driverId);
+	
+	public Driver getCurrentDriverByVin(String vin);
+	
+	
+	
+	
+}

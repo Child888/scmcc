@@ -1,0 +1,43 @@
+10
+
+dir
+642
+svn://16.187.53.65/MBVAN/source_code/MB_VAN_backend/src/main/java/com/hp/mbvan/tsp/vehicle
+svn://16.187.53.65
+
+
+
+2012-12-18T14:41:42.291277Z
+635
+lfeng@hp.com
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+ea57f234-da90-45df-8231-801b340a8110
+
+domain
+dir
+
+dto
+dir
+
+repository
+dir
+
+service
+dir
+
+webservice
+dir
+

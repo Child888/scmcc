@@ -1,0 +1,9 @@
+package com.hp.mbvan.common.datahandle;
+
+import com.hp.mbvan.common.dto.ClientResponseWithHeader;
+
+public interface ResponseHandler {
+
+	public ClientResponseWithHeader wrapResponseHead(ClientResponseWithHeader clientResponse);
+	
+}

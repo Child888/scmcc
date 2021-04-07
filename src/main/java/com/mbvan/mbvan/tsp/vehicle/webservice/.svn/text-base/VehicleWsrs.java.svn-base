@@ -1,0 +1,151 @@
+package com.hp.mbvan.tsp.vehicle.webservice;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.hp.mbvan.common.datahandle.DefaultResponseHandler;
+import com.hp.mbvan.common.datahandle.ExceptionHandler;
+import com.hp.mbvan.common.dto.SingleDataClientResponse;
+import com.hp.mbvan.common.service.BaseCrudService;
+import com.hp.mbvan.common.util.AssertUtil;
+import com.hp.mbvan.common.webservice.jaxrs.impl.DefaultBaseCrudJaxrsImpl;
+import com.hp.mbvan.tsp.vehicle.domain.Driver;
+import com.hp.mbvan.tsp.vehicle.domain.Task;
+import com.hp.mbvan.tsp.vehicle.domain.Vehicle;
+import com.hp.mbvan.tsp.vehicle.domain.VehicleLocationHistory;
+import com.hp.mbvan.tsp.vehicle.dto.VehicleExtendedInfo;
+import com.hp.mbvan.tsp.vehicle.service.DriverService;
+import com.hp.mbvan.tsp.vehicle.service.TaskService;
+import com.hp.mbvan.tsp.vehicle.service.VehicleService;
+
+@Component
+public class VehicleWsrs extends DefaultBaseCrudJaxrsImpl<Vehicle> {
+
+	@Autowired
+	private VehicleService vehicleService;
+
+    @Autowired
+    private TaskService taskService;
+    
+	
+    @Autowired
+    private DriverService driverService;
+	
+	@Override
+	protected BaseCrudService<Vehicle> getService() {
+		return vehicleService;
+	}
+
+    @POST
+    @Path("vehicleLocationHistory")
+    public SingleDataClientResponse<VehicleLocationHistory> saveVehicleLocation(VehicleLocationHistory vehicleLocationHistory) throws ParseException {
+        SingleDataClientResponse<VehicleLocationHistory> response = null;
+		try {
+			AssertUtil.notNull(vehicleLocationHistory, "entityBody");
+			vehicleLocationHistory = vehicleService.addVehicleLocationHistory(vehicleLocationHistory);
+			response = DefaultResponseHandler.generateSingleDataClientResponse(vehicleLocationHistory);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response = ExceptionHandler.handleExceptionToSingleDataClientResponse(e);
+		}
+
+        return response;
+    }
+
+    @GET
+    @Path("vehicleExtendedInfo/{vin}")
+    public SingleDataClientResponse<VehicleExtendedInfo> getVehicleExtendedInfo(@PathParam("vin") String vin){
+
+        SingleDataClientResponse<VehicleExtendedInfo> response = null;
+		try {
+			Vehicle vehicle = vehicleService.findByVin(vin);
+			VehicleExtendedInfo extendInfo = null;
+			if(vehicle != null) {
+				extendInfo = convertVehicleToExtendedInfo(vehicle);
+			}
+			response = DefaultResponseHandler.generateSingleDataClientResponse(extendInfo);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response = ExceptionHandler.handleExceptionToSingleDataClientResponse(e);
+		}
+        return response;
+
+    }
+
+    @GET
+    @Path("vehicleExtendedInfo/list")
+    public SingleDataClientResponse<List<VehicleExtendedInfo>> getVehicleExtendedInfoList(){
+        SingleDataClientResponse<List<VehicleExtendedInfo>> response = null;
+		try {
+			List<VehicleExtendedInfo> responseList = new ArrayList<VehicleExtendedInfo>();
+			Iterable<Vehicle> vehicles = vehicleService.findAll();
+			for(Vehicle vehicle:vehicles){
+				VehicleExtendedInfo extendInfo = convertVehicleToExtendedInfo(vehicle);
+			    responseList.add(extendInfo);
+			}
+			response = DefaultResponseHandler.generateSingleDataClientResponse(responseList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response = ExceptionHandler.handleExceptionToSingleDataClientResponse(e);
+		}
+        return response;
+    }
+
+//    @POST
+//    @Path("Vehicle_Extended_Info")
+//    public VehicleExtendedInfoEditResponse createVehicleExtendedInfo(VehicleExtendedInfoSaveRequest request){
+//        Vehicle vehicle = new Vehicle();
+//        vehicle.setVin(request.getVIN());
+//        vehicle.setModel(request.getModel());
+//        vehicle.setPlateNumber(request.getPlate_Number());
+//        vehicleService.create(vehicle);
+//        VehicleExtendedInfoEditResponse response = new VehicleExtendedInfoEditResponse();
+//        response.setVIN(request.getVIN());
+//        response.setStatus("Created");
+//        return response;
+//    }
+//
+//    @DELETE
+//    @Path("Vehicle_Extended_Info/{vin}")
+//    public VehicleExtendedInfoEditResponse deleteVehicleExtendedInfo(@PathParam("vin") String vin){
+//        vehicleService.deleteByVin(vin);
+//        VehicleExtendedInfoEditResponse response = new VehicleExtendedInfoEditResponse();
+//        response.setVIN(vin);
+//        response.setStatus("Deleted");
+//        return response;
+//    }
+
+    
+    private VehicleExtendedInfo convertVehicleToExtendedInfo(Vehicle vehicle){
+    	VehicleExtendedInfo extendedInfo = new VehicleExtendedInfo();
+    	extendedInfo.setVin(vehicle.getVin());
+    	extendedInfo.setModel(vehicle.getModel());
+    	extendedInfo.setPlateNumber(vehicle.getPlateNumber());
+    	
+    	Long historyId = vehicle.getLatestLocationHistoryID();
+    	if(historyId != null ){
+    		VehicleLocationHistory location =  vehicleService.findVehicleLocationHistoryById(historyId);
+    		if(location != null) {
+    			extendedInfo.setCurrentLocation(location.getLocation());
+    		}
+    	}
+
+		Driver currentDriver = driverService.getCurrentDriverByVin(vehicle.getVin());
+		Task currentTask = taskService.getCurrentTaskByVin(vehicle.getVin());
+		extendedInfo.setCurrentDriver(currentDriver);
+		extendedInfo.setCurrentTask(currentTask);
+
+    	return extendedInfo;
+    }
+    
+
+}

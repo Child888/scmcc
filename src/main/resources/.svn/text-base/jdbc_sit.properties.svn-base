@@ -1,0 +1,46 @@
+# Properties file with JDBC-related settings.
+# Applied by PropertyPlaceholderConfigurer from "dataAccessContext-local.xml".
+# Targeted at system administrators, to avoid touching the context XML files.
+
+
+datasource.driverClassName=net.sourceforge.jtds.jdbc.Driver
+datasource.url=jdbc:jtds:sqlserver://16.187.54.172:1433;DatabaseName=cvctspnew
+datasource.username=sa
+datasource.password=aaaaaa
+
+lportal.datasource.driverClassName=net.sourceforge.jtds.jdbc.Driver
+lportal.datasource.url=jdbc:jtds:sqlserver://16.187.54.172:1433;DatabaseName=lportal
+lportal.datasource.username=sa
+lportal.datasource.password=aaaaaa
+
+#lportal.datasource.driverClassName=com.mysql.jdbc.Driver
+#lportal.datasource.url=jdbc:mysql://localhost/lportal?useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false
+#lportal.datasource.username=root
+#lportal.datasource.password=1
+
+
+#datasource.url=jdbc:oracle:thin:@16.156.210.205:1521:XE
+#datasource.username=test
+#datasource.password=1
+
+
+#datasource.url=jdbc:oracle:thin:@16.173.234.5:1521:aaas
+#datasource.username=aaas_mon
+#datasource.password=aaas
+
+datasource.maxActive=10
+datasource.maxIdle=2
+datasource.maxWait=120000
+datasource.whenExhaustedAction=1
+datasource.validationQuery=select 1 from dual
+datasource.testOnBorrow=true
+datasource.testOnReturn=false
+
+c3p0.acquireIncrement=3
+c3p0.initialPoolSize=3
+c3p0.idleConnectionTestPeriod=900
+c3p0.minPoolSize=2
+c3p0.maxPoolSize=50
+c3p0.maxStatements=100
+c3p0.numHelperThreads=10
+c3p0.maxIdleTime=600

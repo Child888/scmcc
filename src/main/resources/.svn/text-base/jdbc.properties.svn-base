@@ -1,0 +1,31 @@
+# Properties file with JDBC-related settings.
+# Applied by PropertyPlaceholderConfigurer from "dataAccessContext-local.xml".
+# Targeted at system administrators, to avoid touching the context XML files.
+
+
+datasource.driverClassName=org.h2.Driver
+datasource.url=jdbc:h2:file:c:/dev/h2_data/mbvan;AUTO_SERVER=TRUE;MODE=MSSQLServer
+datasource.username=sa
+datasource.password=aaaaaa
+
+
+
+datasource.maxActive=10
+datasource.maxIdle=2
+datasource.maxWait=120000
+datasource.whenExhaustedAction=1
+datasource.validationQuery=select 1 from dual
+datasource.testOnBorrow=true
+datasource.testOnReturn=false
+
+c3p0.acquireIncrement=3
+c3p0.initialPoolSize=3
+c3p0.idleConnectionTestPeriod=900
+c3p0.minPoolSize=2
+c3p0.maxPoolSize=50
+c3p0.maxStatements=100
+c3p0.numHelperThreads=10
+c3p0.maxIdleTime=600
+
+
+

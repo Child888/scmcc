@@ -1,0 +1,46 @@
+package com.hp.mbvan.common.webservice.jaxrs;
+
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+
+import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.hp.mbvan.common.dto.ClientResponseWithHeader;
+import com.hp.mbvan.common.dto.SingleDataClientResponse;
+
+@Produces({ "application/json" })
+@Path("/")
+@Transactional(readOnly = true)
+public interface BaseCrudJaxrs<T> {
+
+	@GET
+	@Path("/{id}")
+	SingleDataClientResponse<T> get(@PathParam("id") Long id);
+
+//	@DELETE
+//	@Path("/{id}")
+//	@Transactional
+//	ClientResponseWithHeader delete(@PathParam("id") Long id);
+
+	@POST
+	@Transactional
+	SingleDataClientResponse<T> create(T t);
+
+	@PUT
+	@Transactional
+	SingleDataClientResponse<T> update(T t);
+
+	@GET
+	@Path("/list")
+	SingleDataClientResponse<Iterable<T>> findAll();
+
+	@GET
+	@Path("/list/{pageNumber}/{pageSize}")
+	SingleDataClientResponse<Page<T>> findByPage(@PathParam("pageNumber") int pageNumber,@PathParam("pageSize") int pageSize);
+}

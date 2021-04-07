@@ -1,0 +1,6 @@
+package com.hp.mbvan.common.dto;
+
+//base interface of all client response 
+public interface ClientResponse {
+
+}
